@@ -1,0 +1,59 @@
+# manifests/init.pp
+
+class example {
+  define ressource {
+    notify { "$name": }
+
+    file { "/tmp/all-names.xml-${name}":
+            content => template("example/all-ressources.erb"),
+    }
+
+  }
+}
+
+# templates/all-ressources.erb
+
+# here I need all example::ressources
+<root>
+    <name><%= name %></name>
+</root>
+
+# It should look like this
+# <root>
+#   <name>test1</name>
+#   <name>test2</name>
+# </root>
+
+# output
+notice: Ignoring --listen on onetime run
+info: Retrieving plugin
+info: Caching catalog for puppetmaster.domain.tld
+info: Applying configuration version '1334321275'
+notice: test2
+notice: /Stage[main]//Example::Ressource[test2]/Notify[test2]/message: defined 'message' as 'test2'
+notice: test1
+notice: /Stage[main]//Example::Ressource[test1]/Notify[test1]/message: defined 'message' as 'test1'
+notice: /Stage[main]//Example::Ressource[test2]/File[/tmp/all-names.xml-test2]/ensure: defined content as '{md5}d3bf6254a8d9ca65cb8b145536e12d42'
+notice: /Stage[main]//Example::Ressource[test1]/File[/tmp/all-names.xml-test1]/ensure: defined content as '{md5}f9db141bf2689f5b02140df77cd239c4'
+notice: Finished catalog run in 1.18 seconds
+# cat /tmp/all-names.xml-test*
+# here I need all example::ressources
+<root>
+    <name>test1</name>
+</root>
+
+# It should look like this
+# <root>
+#   <name>test1</name>
+#   <name>test2</name>
+# </root>
+# here I need all example::ressources
+<root>
+    <name>test2</name>
+</root>
+
+# It should look like this
+# <root>
+#   <name>test1</name>
+#   <name>test2</name>
+# </root>
