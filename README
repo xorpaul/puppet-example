@@ -11,6 +11,9 @@ class example {
   }
 }
 
+example::ressource { "test1": }
+example::ressource { "test2": }
+
 # templates/all-ressources.erb
 
 # here I need all example::ressources
