@@ -1,21 +1,29 @@
 # manifests/init.pp
-
 class example {
+
   define ressource {
     notify { "$name": }
 
-    file { "/tmp/all-names.xml-${name}":
-            content => template("example/all-ressources.erb"),
-    }
+    #file { "/tmp/all-names.xml-${name}":
+    #  content => template("example/all-ressources.erb"),
+    #}
 
   }
 }
 
 example::ressource { "test1": }
 example::ressource { "test2": }
+require example::once
+
+class example::once {
+
+    file { "/tmp/all-names.xml":
+      content => template("example/all-ressources.erb"),
+    }
+
+}
 
 # templates/all-ressources.erb
-
 # here I need all example::ressources
 <root>
     <name><%= name %></name>
@@ -30,29 +38,19 @@ example::ressource { "test2": }
 # output
 notice: Ignoring --listen on onetime run
 info: Retrieving plugin
-info: Caching catalog for puppetmaster.domain.tld
-info: Applying configuration version '1334321275'
+info: Loading facts in /var/lib/puppet/lib/facter/concat_basedir.rb
+info: Caching catalog for s3p7084.domain.tld
+info: Applying configuration version '1334846798'
+notice: /Stage[main]/Example::Once/File[/tmp/all-names.xml]/ensure: defined content as '{md5}e1bd7135dbc43d5e77e8808eaa36ddb9'
 notice: test2
 notice: /Stage[main]//Example::Ressource[test2]/Notify[test2]/message: defined 'message' as 'test2'
 notice: test1
 notice: /Stage[main]//Example::Ressource[test1]/Notify[test1]/message: defined 'message' as 'test1'
-notice: /Stage[main]//Example::Ressource[test2]/File[/tmp/all-names.xml-test2]/ensure: defined content as '{md5}d3bf6254a8d9ca65cb8b145536e12d42'
-notice: /Stage[main]//Example::Ressource[test1]/File[/tmp/all-names.xml-test1]/ensure: defined content as '{md5}f9db141bf2689f5b02140df77cd239c4'
-notice: Finished catalog run in 1.18 seconds
-# cat /tmp/all-names.xml-test*
+notice: Finished catalog run in 0.52 seconds
+# cat /tmp/all-names.xml
 # here I need all example::ressources
 <root>
-    <name>test1</name>
-</root>
-
-# It should look like this
-# <root>
-#   <name>test1</name>
-#   <name>test2</name>
-# </root>
-# here I need all example::ressources
-<root>
-    <name>test2</name>
+    <name>example::once</name>
 </root>
 
 # It should look like this
